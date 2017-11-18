@@ -1,4 +1,4 @@
-import parser, math
+import parser, math as m
 
 def parseEquation(exp):
     return parser.expr(exp).compile()
@@ -12,8 +12,8 @@ def EulersEquation(eq,xVal,y,h,n):
     return results
 
 def realFunction(re,h):
-    r = []
-    e = math.exp(1)
+    r = []                              # Use other variables that your equation has in here. Define it here. Example t = 5.
+    e = m.exp(1)
     for x in h:
         r.append(eval(re))
     return r
