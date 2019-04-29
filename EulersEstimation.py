@@ -13,7 +13,7 @@ def EulersEquation(eq,xVal,y,h,n):
 
 def realFunction(re,h):
     r = []                              # Use other variables that your equation has in here. Define it here. Example t = 5.
-    e = m.exp(1)
+    e = math.e
     for x in h:
         r.append(eval(re))
     return r
