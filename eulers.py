@@ -7,27 +7,18 @@ def analytical_eulers(f, f_actual, t0, y0, p, h = None, n = None):
 		h = (p-t0)/n
 	if n == None:
 		n = int((p-t0)/h)
-	t = t0
 
 	print(f't\t\t|\tEstimate\t\t|\tExact\t\t\t|\tError')
 	print("-"*100)
+	print(f'{t0}\t\t|\t{y0:.9f}\t\t|\t{f_actual(t0):.9f}\t\t|\t{abs(f_actual(t0)-y0):.9f}')
 
 	estimate = [(t0,y0)]
 	for i in range(n):
-		y0 = y0 + h*f(t, y0)
-		t += h
-		estimate.append((t, y0))
-
-	t = t0
-	actual = []
-	for i in range(n+1):
-		actual.append(f_actual(t))
-		t += h
-
-	t = t0
-	for i in range(len(estimate)):
-		print(f'{estimate[i][0]}\t\t|\t{estimate[i][1]:.9f}\t\t|\t{actual[i]:.9f}\t\t|\t{abs(actual[i]-estimate[i][1]):.9f}')
+		y0 = y0 + h*f(t0, y0)
 		t0 += h
+		actual = f_actual(t0)
+		print(f'{t0}\t\t|\t{y0:.9f}\t\t|\t{actual:.9f}\t\t|\t{abs(actual-y0):.9f}')
+
 	print("-"*100)
 
 def eulers_estimate(f, t0, y0, p, h = None, n = None):
@@ -53,8 +44,8 @@ def main():
 	option = int(input("Choose\n1) Euler's Approximation\n2) Euler's Analytical\n"))
 
 	# Define these functions depending on your choice.
-	f_analytical = lambda t: t + 1/(1-t)
-	f = lambda t, y: 1 + (t-y)**2
+	f_analytical = lambda t: t*log(t) + 2*t
+	f = lambda t, y: 1 + y/t
 
 	if option == 2 and f_analytical == None:
 		print("Please define the analytical function to continue. Aborting...")
