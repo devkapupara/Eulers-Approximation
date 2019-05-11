@@ -1,55 +1,74 @@
 from math import *
 
-def analytical_eulers(f, f_actual, t0, y0, p, h = None, n = None):
+def analytical_eulers(f, f_actual, t, y, p, h = None, n = None):
 	if h == None and n == None:
 		print("Please specify both h and n. Aborting...")
+		return
 	if h == None:
-		h = (p-t0)/n
+		h = (p-t)/n
 	if n == None:
-		n = int((p-t0)/h)
+		n = int((p-t)/h)
 
 	print(f't\t\t|\tEstimate\t\t|\tExact\t\t\t|\tError')
 	print("-"*100)
-	print(f'{t0}\t\t|\t{y0:.9f}\t\t|\t{f_actual(t0):.9f}\t\t|\t{abs(f_actual(t0)-y0):.9f}')
+	print(f'{t:.3f}\t\t|\t{y:.9f}\t\t|\t{f_actual(t):.9f}\t\t|\t{abs(f_actual(t)-y):.9f}')
 
-	estimate = [(t0,y0)]
 	for i in range(n):
-		y0 = y0 + h*f(t0, y0)
-		t0 += h
-		actual = f_actual(t0)
-		print(f'{t0}\t\t|\t{y0:.9f}\t\t|\t{actual:.9f}\t\t|\t{abs(actual-y0):.9f}')
+		y = y + h*f(t, y)
+		t += h
+		actual = f_actual(t)
+		print(f'{t:.3f}\t\t|\t{y:.9f}\t\t|\t{actual:.9f}\t\t|\t{abs(actual-y):.9f}')
 
 	print("-"*100)
 
-def eulers_estimate(f, t0, y0, p, h = None, n = None):
+def modified_eulers(f, f_actual, t, y, p, h = None, n = None):
 	if h == None and n == None:
 		print("Please specify both h and n. Aborting...")
+		return
 	if h == None:
-		h = (p-t0)/n
+		h = (p-t)/n
 	if n == None:
-		n = int((p-t0)/h)
+		n = int((p-t)/h)
+
+	print(f't\t\t|\tEstimate\t\t|\tExact\t\t\t|\tError')
+	print("-"*100)
+	print(f'{t:.3f}\t\t|\t{y:.9f}\t\t|\t{f_actual(t):.9f}\t\t|\t{abs(f_actual(t)-y):.9f}')
+
+	for i in range(n):
+		func_value = f(t, y)
+		t += h
+		next_value = f(t, y + h*func_value)
+		y = y + h/2*(func_value + next_value)
+		actual_value = f_actual(t)
+		print(f'{t:.3f}\t\t|\t{y:.9f}\t\t|\t{actual_value:.9f}\t\t|\t{abs(actual_value-y):.9f}')
+
+
+def eulers_estimate(f, t, y, p, h = None, n = None):
+	if h == None and n == None:
+		print("Please specify both h and n. Aborting...")
+		return
+	if h == None:
+		h = (p-t)/n
+	if n == None:
+		n = int((p-t)/h)
 
 	print(f't\t\t|\tEstimate')
 	print('-'*40)
 
-	print(f'{t0:.3f}\t\t|\t{y0:.9f}')
+	print(f'{t:.3f}\t\t|\t{y:.9f}')
 
 	for i in range(n):
-		y0 = y0 + h*f(t0, y0)
-		t0 += h
-		print(f'{t0:.3f}\t\t|\t{y0:.9f}')
+		y = y + h*f(t, y)
+		t += h
+		print(f'{t:.3f}\t\t|\t{y:.9f}')
 	print('-'*40)
 
 def main():
-	option = int(input("Choose\n1) Euler's Approximation\n2) Euler's Analytical\n"))
+	option = int(input("Choose\n1) Euler's Approximation\n2) Euler's Analytical\n3) Modified Euler's\n"))
 
-	# Define these functions depending on your choice.
-	f_analytical = lambda t: t*log(t) + 2*t
-	f = lambda t, y: 1 + y/t
-
-	if option == 2 and f_analytical == None:
-		print("Please define the analytical function to continue. Aborting...")
-		return
+	# Define these functions depending on the problem.
+	f = lambda t, y: cos(2*t) + sin(3*t)
+	f_analytical = lambda t: sin(2*t)/2 - cos(3*t)/3 + 4/3
 
 	t0 = float(input("t0 = "))
 	t = t0
@@ -68,8 +87,10 @@ def main():
 		n = None
 	if option == 1:
 		eulers_estimate(f, t0, y0, p, h, n)
-	else:
+	elif option == 2:
 		analytical_eulers(f, f_analytical, t0, y0, p, h, n)
+	else:
+		modified_eulers(f, f_analytical, t0, y0, p, h, n)
 
 if __name__ == '__main__':
 	main()
