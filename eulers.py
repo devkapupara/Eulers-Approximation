@@ -1,13 +1,7 @@
 from math import *
 
-def analytical_eulers(f, f_actual, t, y, p, h = None, n = None):
-	if h == None and n == None:
-		print("Please specify both h and n. Aborting...")
-		return
-	if h == None:
-		h = (p-t)/n
-	if n == None:
-		n = int((p-t)/h)
+def analytical_eulers(f, f_actual, t, y, p, h):
+	n = int((p-t)/h)
 
 	print(f't\t\t|\tEstimate\t\t|\tExact\t\t\t|\tError')
 	print("-"*100)
@@ -21,14 +15,8 @@ def analytical_eulers(f, f_actual, t, y, p, h = None, n = None):
 
 	print("-"*100)
 
-def modified_eulers(f, f_actual, t, y, p, h = None, n = None):
-	if h == None and n == None:
-		print("Please specify both h and n. Aborting...")
-		return
-	if h == None:
-		h = (p-t)/n
-	if n == None:
-		n = int((p-t)/h)
+def modified_eulers(f, f_actual, t, y, p, h):
+	n = int((p-t)/h)
 
 	print(f't\t\t|\tEstimate\t\t|\tExact\t\t\t|\tError')
 	print("-"*100)
@@ -41,16 +29,10 @@ def modified_eulers(f, f_actual, t, y, p, h = None, n = None):
 		y = y + h/2*(func_value + next_value)
 		actual_value = f_actual(t)
 		print(f'{t:.3f}\t\t|\t{y:.9f}\t\t|\t{actual_value:.9f}\t\t|\t{abs(actual_value-y):.9f}')
+	print("-"*100)
 
-
-def eulers_estimate(f, t, y, p, h = None, n = None):
-	if h == None and n == None:
-		print("Please specify both h and n. Aborting...")
-		return
-	if h == None:
-		h = (p-t)/n
-	if n == None:
-		n = int((p-t)/h)
+def eulers_estimate(f, t, y, p, h):
+	n = int((p-t)/h)
 
 	print(f't\t\t|\tEstimate')
 	print('-'*40)
@@ -67,30 +49,21 @@ def main():
 	option = int(input("Choose\n1) Euler's Approximation\n2) Euler's Analytical\n3) Modified Euler's\n"))
 
 	# Define these functions depending on the problem.
-	f = lambda t, y: cos(2*t) + sin(3*t)
-	f_analytical = lambda t: sin(2*t)/2 - cos(3*t)/3 + 4/3
+	f = lambda t, y: (2-2*t*y)/(1+t*t)
+	f_analytical = lambda t: (2*t+1)/(1+t*t)
 
 	t0 = float(input("t0 = "))
 	t = t0
 	y0 = float(input("y0 = "))
 	p = float(input("Evaluation point = "))
-	h = ""
-	n = ""
-	while h.strip() == "" and n.strip() == "":
-		h = input("Enter H [Leave blank if you want to enter N]: ")
-		n = input("Enter N [Leave blank if H already inputted]: ")
-	if h == "":
-		n = int(n)
-		h = None
-	else:
-		h = float(h)
-		n = None
+	h = float(input("Step-size = "))
+	
 	if option == 1:
-		eulers_estimate(f, t0, y0, p, h, n)
+		eulers_estimate(f, t0, y0, p, h)
 	elif option == 2:
-		analytical_eulers(f, f_analytical, t0, y0, p, h, n)
+		analytical_eulers(f, f_analytical, t0, y0, p, h)
 	else:
-		modified_eulers(f, f_analytical, t0, y0, p, h, n)
+		modified_eulers(f, f_analytical, t0, y0, p, h)
 
 if __name__ == '__main__':
 	main()
